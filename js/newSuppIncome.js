@@ -1,44 +1,67 @@
+// newSuppIncome.js
+// CRUD de Ingresos Extra (crear, editar, borrar) contra backend cross-origin.
+// - Usa window.API_BASE (inyectado por js/config.js).
+// - Resuelve URL de imagen (absoluta/relativa) y maneja modales.
+
 document.addEventListener('DOMContentLoaded', () => {
+  // 1) Requiere login
   const token = sessionStorage.getItem('authToken');
-  if (!token) { 
-    window.location.href = 'index.html'; 
-    return; 
-  }
+  if (!token) { window.location.href = 'index.html'; return; }
 
-  const API_BASE = window.API_BASE || window.location.origin;
+  // 2) Base del API
+  const API_BASE = (typeof window.API_BASE === 'string' && window.API_BASE) ? window.API_BASE : window.location.origin;
+
+  // 3) Params (?id=... => modo edición)
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id"); // si viene, es edición
+  const id = params.get("id");
 
-  const nameEl = document.getElementById('displayName');       
-  const iconEl = document.getElementById('baseProfileIcon');    
-  const imgEl  = document.getElementById('baseProfileImage');   
+  // 4) Referencias UI
+  const nameEl = document.getElementById('displayName');
+  const iconEl = document.getElementById('baseProfileIcon');
+  const imgEl  = document.getElementById('baseProfileImage');
 
+  const addBtn = document.getElementById('add-btn');
+  const deleteBtn = document.getElementById("delete-btn");
+  const confirmModal = document.getElementById('confirmModal');
+  const successModal = document.getElementById('successModal');
+  const confirmChangesBtn = document.getElementById('confirmChangesBtn');
+  const cancelChangesBtn = document.getElementById('cancelChangesBtn');
+  const successOkBtn = document.getElementById('successOkBtn');
   const confirmText = document.getElementById("confirmText");
   const successText = document.getElementById("successText");
-  const deleteBtn = document.getElementById("delete-btn");
 
   const dateInput = document.getElementById('date');
   const today = new Date().toISOString().split('T')[0];
-  if (dateInput && !id) dateInput.value = today;
+  if (dateInput && !id) dateInput.value = today; // fecha por defecto en crear
 
-  // ---- Resolver imagen de perfil ----
+  // 5) Helpers
   const resolveImageUrl = (raw) => {
-    if (!raw) return null;              
-    const s = String(raw).trim();       
-    if (!s) return null;                
-    if (/^https?:\/\//i.test(s)) return s; 
-    const path = s.startsWith('/') ? s : `/${s}`;
-    return `${API_BASE}${path}`;        
+    if (!raw) return null;
+    const s = String(raw).trim();
+    if (!s) return null;
+    if (/^https?:\/\//i.test(s)) return s;        // ya es absoluta
+    const path = s.startsWith('/') ? s : `/${s}`;  // normaliza
+    return `${API_BASE}${path}`;                   // absoluta respecto al API
   };
 
-  // ---- Cargar datos del usuario ----
+  const setModal = (el, visible) => { if (el) el.style.display = visible ? 'flex' : 'none'; };
+
+  const parseError = async (resp) => {
+    const ct = resp.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      try {
+        const j = await resp.json();
+        return j.detail || j.error || j.message || JSON.stringify(j).slice(0, 500);
+      } catch (_) {}
+    }
+    return (await resp.text()).slice(0, 500) || `HTTP ${resp.status}`;
+  };
+
+  // 6) Cargar cabecera de usuario
   (async () => {
     try {
       const res = await fetch(`${API_BASE}/api/auth/me/`, {
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token 
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       });
       if (!res.ok) throw new Error('No autorizado');
       const data = await res.json();
@@ -49,102 +72,100 @@ document.addEventListener('DOMContentLoaded', () => {
         imgEl.onerror = () => { imgEl.style.display = 'none'; iconEl.style.display = 'block'; };
         imgEl.src = url + (url.includes('?') ? `&t=${Date.now()}` : `?t=${Date.now()}`);
       }
-    } catch { window.location.href = 'index.html'; }
+    } catch {
+      window.location.href = 'index.html';
+    }
   })();
 
-  // ---- Formularios y modales ----
-  const addBtn = document.getElementById('add-btn');
-  const confirmModal = document.getElementById('confirmModal');
-  const successModal = document.getElementById('successModal');
-  const confirmChangesBtn = document.getElementById('confirmChangesBtn');
-  const cancelChangesBtn = document.getElementById('cancelChangesBtn');
-  const successOkBtn = document.getElementById('successOkBtn');
-
-  // Si estamos editando, cargar datos
+  // 7) Modo edición: precarga y borrar
   if (id) {
-    addBtn.value = "Guardar Cambios";
-    confirmText.textContent = "¿Deseas guardar los cambios de este ingreso?";
-    successText.textContent = "¡El ingreso se actualizó correctamente!";
-    deleteBtn.style.display = "inline-block";
+    if (addBtn) addBtn.value = "Guardar Cambios";
+    if (confirmText) confirmText.textContent = "¿Deseas guardar los cambios de este ingreso extra?";
+    if (successText) successText.textContent = "¡El ingreso extra se actualizó correctamente!";
+    if (deleteBtn) deleteBtn.style.display = "inline-block";
 
     (async () => {
-      const res = await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      if (res.ok) {
+      try {
+        const res = await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error(await parseError(res));
         const data = await res.json();
         document.getElementById("incomeType").value = data.name || "";
         document.getElementById("description").value = data.reason || "";
-        document.getElementById("amount").value = data.quantity || "";
+        document.getElementById("amount").value = data.quantity ?? "";
         document.getElementById("date").value = data.date || today;
+      } catch (err) {
+        alert("Error: " + (err?.message || String(err)));
       }
     })();
 
-    // Eliminar
-    deleteBtn.onclick = async () => {
-      if (confirm("¿Seguro que deseas eliminar este ingreso extra?")) {
-        await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
-          method: "DELETE",
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        window.location.href = "income.html";
-      }
-    };
+    if (deleteBtn) {
+      deleteBtn.onclick = async () => {
+        if (!confirm("¿Seguro que deseas eliminar este ingreso extra?")) return;
+        try {
+          const resp = await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
+            method: "DELETE",
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          if (!resp.ok) throw new Error(await parseError(resp));
+          window.location.href = "income.html";
+        } catch (err) {
+          alert("Error: " + (err?.message || String(err)));
+        }
+      };
+    }
+  } else {
+    // Modo crear
+    if (addBtn) addBtn.value = "Agregar ingreso extra";
+    if (confirmText) confirmText.textContent = "¿Deseas crear este ingreso extra?";
+    if (successText) successText.textContent = "¡El ingreso extra se creó correctamente!";
+    if (deleteBtn) deleteBtn.style.display = "none";
   }
 
-  // Abrir modal de confirmación
-  addBtn.onclick = function (e) {
-    e.preventDefault();
-    confirmModal.style.display = 'flex';
-  };
+  // 8) Abrir/cerrar modales
+  if (addBtn) addBtn.onclick = (e) => { e.preventDefault(); setModal(confirmModal, true); };
+  if (cancelChangesBtn) cancelChangesBtn.onclick = () => setModal(confirmModal, false);
+  if (successOkBtn) successOkBtn.onclick = () => window.location.href = "income.html";
 
-  // Confirmar y guardar en API
-  confirmChangesBtn.onclick = async function () {
-    const incomeType = document.getElementById('incomeType').value;
-    const description = document.getElementById('description').value;
-    const amount = document.getElementById('amount').value;
-    const date = document.getElementById('date').value;
+  // 9) Guardar (crear/actualizar)
+  if (confirmChangesBtn) {
+    confirmChangesBtn.onclick = async () => {
+      const payload = {
+        name: (document.getElementById('incomeType')?.value || '').trim(),
+        reason: (document.getElementById('description')?.value || '').trim(),
+        quantity: String(document.getElementById('amount')?.value || '').trim(),
+        date: (document.getElementById('date')?.value || '').trim()
+      };
 
-    const payload = {
-      name: incomeType,
-      reason: description,
-      quantity: String(amount),
-      date: date
-    };
+      // Validaciones básicas
+      if (!payload.name) { alert("El nombre del ingreso es requerido"); return; }
+      if (!payload.quantity || isNaN(Number(payload.quantity))) { alert("El monto debe ser numérico"); return; }
+      if (!payload.date) { alert("La fecha es requerida"); return; }
 
-    try {
-      const response = await fetch(
-        id ? `${API_BASE}/api/IngresosExtra/${id}/` : `${API_BASE}/api/IngresosExtra/`,
-        {
-          method: id ? "PUT" : "POST",
+      const url = id ? `${API_BASE}/api/IngresosExtra/${id}/` : `${API_BASE}/api/IngresosExtra/`;
+      const method = id ? "PUT" : "POST";
+
+      try {
+        const response = await fetch(url, {
+          method,
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
           body: JSON.stringify(payload)
-        }
-      );
+        });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error("Error al guardar el ingreso: " + errorText);
+        if (!response.ok) throw new Error(await parseError(response));
+
+        setModal(confirmModal, false);
+        setModal(successModal, true);
+      } catch (err) {
+        setModal(confirmModal, false);
+        alert("Error: " + (err?.message || String(err)));
       }
+    };
+  }
 
-      confirmModal.style.display = 'none';
-      successModal.style.display = 'flex';
-    } catch (err) {
-      confirmModal.style.display = 'none';
-      alert("Error: " + err.message);
-    }
-  };
-
-  // Cerrar modal de confirmación
-  cancelChangesBtn.onclick = function () {
-    confirmModal.style.display = 'none';
-  };
-
-  // Redirigir después de éxito
-  successOkBtn.onclick = function () {
-    window.location.href = "income.html";
-  };
+  console.info("[newSuppIncome] API_BASE:", API_BASE, "id:", id || "(new)");
 });
