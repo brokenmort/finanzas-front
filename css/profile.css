@@ -1,0 +1,222 @@
+/* 🔹 Reset general */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Lato", sans-serif;
+    background-image: url(../image/background.jpg);
+    background-color: rgb(197, 195, 195);
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow-x: hidden;
+}
+
+/* Barra superior fija (back + home) */
+.top-bar {
+    position: fixed;
+    top: 8px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+}
+.backArrow{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.home-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 2em;
+    color: #90b067;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+.backArrow:hover,
+.home-icon:hover { transform: scale(1.5); transition: transform 0.5s ease; }
+
+/* 🔹 Contenedor principal */
+.contenedor-padre {
+    background: linear-gradient(#606c3886, #90b067);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    min-width: 300px;
+    padding: 20px 30px;
+    border-radius: 20px;
+    margin: 20px auto;
+    padding-top: 60px; /* evita solape con top-bar */
+    box-sizing: border-box;
+}
+
+/* 🔹 Contenedor interno */
+.contenedor {
+    width: 100%;
+    background: rgba(222, 222, 222, 0.176);
+    border-radius: 50px;
+    padding: 30px;
+    box-shadow: 0px 10px 15px rgba(1,1,1,0.1);
+    box-sizing: border-box; /* evita overflow hacia la derecha */
+}
+
+/* 🔹 Username: imagen + nombre + botón */
+.username {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Imagen y texto alineados arriba */
+    gap: 0px;
+    margin-bottom: 20px;
+}
+
+/* 🔹 Imagen de perfil */
+.profile-image-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #a26127;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 3em;
+    color: #a26127;
+    flex-shrink: 0;
+}
+#profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: none;
+}
+
+/* 🔹 Contenedor de texto y botón al lado de la imagen */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* alineado a la izquierda */
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 🔹 Nombre de usuario */
+#displayName {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 🔹 Botón Select Photo */
+.custom-file-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #a26127;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    max-width: 100%;
+}
+.custom-file-upload:hover { background-color: #dda15e; }
+input[type="file"] { display: none; }
+
+/* 🔹 Formulario de perfil */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* etiquetas más cercanas a los inputs */
+}
+.form-row label {
+    width: auto; /* elimina separación excesiva */
+    min-width: 140px; /* ancho razonable para alineación */
+}
+.form-row input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 50px;
+    border: none;
+    text-align: center;
+    box-shadow: 0px 5px 3px rgba(0,0,0,0.1);
+    background-color: rgba(222,222,222,0.3);
+    box-sizing: border-box; /* asegura que padding no cause overflow */
+    max-width: 100%;
+}
+
+/* 🔹 Botones de acción */
+.button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px; /* separa botones del último input */
+}
+#edit-btn, #save-btn, #cancel-btn {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background-color: #a26127;
+    color: #fefae0;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+#edit-btn:hover, #save-btn:hover, #cancel-btn:hover { background-color: #dda15e; }
+
+/* 🔹 Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top:0; left:0;
+    width:100%; height:100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 300px;
+}
+
+/* 🔹 Responsive */
+@media (max-width: 768px) {
+    .contenedor-padre { padding: 64px 16px 16px; margin: 10px; }
+    .contenedor { padding: 16px; }
+    .username { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .profile-image-preview { width: 100px; height: 100px; }
+    .profile-info { align-items: stretch; }
+    .form-row { flex-direction: column; align-items: stretch; gap: 6px; }
+    .form-row label { width: 100%; min-width: 0; }
+    .form-row input { width: 100%; max-width: 100%; padding: 10px; }
+    .button { justify-content: center; gap: 8px; }
+    #edit-btn, #save-btn, #cancel-btn { width: 100%; }
+}
+
+/* Ajuste extra para pantallas muy angostas */
+@media (max-width: 480px) {
+    .contenedor-padre { padding: 64px 12px 12px; margin: 8px; }
+    .contenedor { padding: 12px; }
+    .form-row input { padding: 9px; border-radius: 40px; }
+}

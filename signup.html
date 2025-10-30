@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="css/signup.css">
+</head>
+<body>
+
+    <!-- Contenedor general -->
+    <div class="contenedor-padre">
+        
+        <!-- Encabezado -->
+        <div class="profile-header">
+            <h1>CREATE ACCOUNT</h1>
+        </div>
+
+        <!-- Contenido del formulario -->
+        <div class="contenedor">
+            <div class="form-row">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="form-row">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname">
+            </div>
+
+            <div class="form-row">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname">
+            </div>
+
+            <div class="form-row">
+                <label for="birthday">Date of Birth:</label>
+                <input type="date" id="birthday" name="birthday">
+            </div>
+
+            <div class="form-row">
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+
+            <div class="form-row">
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country">
+            </div>
+
+            <div class="form-row">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+
+            <div class="form-row">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password">
+            </div>
+            <div id="message" style="margin-top:10px;font-weight:bold;"></div>
+        </div>
+
+        <!-- Contenedor del botón -->
+        <div class="button-container">
+            <input type="button" value="Sign Up" id="signup-btn">
+        </div>
+    </div>
+
+
+    <!-- Script JS externo -->
+    <script src="js/config.js"></script>
+    <script src="js/signup.js"></script>
+</body>
+</html>

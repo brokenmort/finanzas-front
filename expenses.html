@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gastos</title>
+  <link rel="stylesheet" href="css/expenses.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="top-bar">
+    <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+    <a href="home.html" class="home-icon"><i class="bi bi-house-fill"></i></a>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="contenedor-padre">
+    <div class="contenedor">
+      <div class="username" dir="auto">
+        <div class="profile-image-preview" id="baseProfileImagePreview">
+          <i class="bi bi-person" id="baseProfileIcon"></i>
+          <img id="baseProfileImage" alt="Profile image" loading="eager" decoding="async">
+        </div>
+        <div class="profile-info">
+          <h1 id="displayName">Usuario</h1>
+        </div>
+      </div>
+
+      <!-- Gastos fijos -->
+      <div id="fixView" class="tab-view">
+        <div class="table-wrap">
+          <table class="fixed-table">
+            <div class="tabs">
+              <input type="button" value="Fixed Expenses" id="fixExp">
+              <input type="button" value="Variable Expenses" id="varExp" onclick="switchTab('var')">
+            </div>
+            <thead>
+              <tr>
+                <th>Expense</th>
+                <th>Amount</th>
+                <th>Periodicity</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="menu-list">
+            <label for="fixFilter1">Expense:</label></br>
+            <div class="split-select">
+              <select id="fixFilter1" name="fixFilter1">
+                <option value="">-- All --</option>
+              </select>
+            </div>
+            <label for="fixFilter2">Periodicity:</label></br>
+            <div class="split-select">
+              <select id="fixFilter2" name="fixFilter2">
+                <option value="">-- All --</option>
+              </select>
+            </div>
+            <input type="submit" value="Search" id="fixSearchBtn">
+          </div>
+
+          <div class="button">
+            <input type="button" value="Add New Expense" id="Add-btn" onclick="location.href='newExpense.html'">
+            <input type="button" id="Log-btn" value="Log Payment" onclick="location.href='logPayment.html'">
+          </div>
+        </div>
+      </div>
+
+      <!-- Gastos variables -->
+      <div id="varView" class="tab-view" style="display: none;">
+        <div class="table-wrap">
+          <table class="supp-table">
+            <div class="tabs">
+              <input type="button" value="Fixed Expenses" id="fixExpSelect" onclick="switchTab('fix')">
+              <input type="button" value="Variable Expenses" id="varExpSelect">
+            </div>
+            <thead>
+              <tr>
+                <th>Expense</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="menu-list">
+            <label for="varFilter1">Expense:</label></br>
+            <div class="split-select">
+              <select id="varFilter1" name="varFilter1">
+                <option value="">-- All --</option>
+              </select>
+            </div>
+            <label for="varFilter2">Date:</label></br>
+            <div class="split-select">
+              <select id="varFilter2" name="varFilter2">
+                <option value="">-- All --</option>
+              </select>
+            </div>
+            <input type="submit" value="Search" id="varSearchBtn">
+          </div>
+
+          <div class="button">
+            <input type="button" value="Add Extra Expense" id="Add-btn" onclick="location.href='newExtraExp.html'">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/expenses.js"></script>
+</body>
+</html>

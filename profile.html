@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="css/profile.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <div class="top-bar">
+    <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+    <a href="home.html" class="home-icon"><i class="bi bi-house-fill"></i></a>
+  </div>
+  <!-- Modal confirmación -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <p>¿Deseas confirmar los cambios?</p>
+      <button id="confirmChangesBtn">Confirmar</button>
+      <button id="cancelChangesBtn">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal éxito -->
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <p>¡Los cambios se guardaron correctamente!</p>
+      <button id="successOkBtn">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="contenedor-padre">
+    <div class="contenedor">
+      <!-- Username y foto -->
+      <div class="username">
+        <!-- Imagen de perfil -->
+        <div class="profile-image-preview" id="profileImagePreview">
+          <i class="bi bi-person" id="profileIcon"></i>
+          <img id="profileImage" alt="Profile image" loading="eager" decoding="async">
+        </div>
+
+        <!-- Contenedor de nombre y botón -->
+        <div class="profile-info">
+          <h1 id="displayName">PROFILE</h1>
+          <label for="profile_image" class="custom-file-upload">
+            <i class="bi bi-camera"></i> Select Photo
+          </label>
+          <input type="file" id="profile_image" name="profile_image" accept="image/*">
+        </div>
+      </div>
+
+      <!-- Formulario de perfil -->
+      <div class="profile-header">
+        <div class="form-row">
+          <label for="email">Email:</label>
+          <input class="profile-input" type="email" id="email" disabled/>
+        </div>
+        <div class="form-row">
+          <label for="first_name">Name:</label>
+          <input class="profile-input" type="text" id="first_name" disabled/>
+        </div>
+        <div class="form-row">
+          <label for="last_name">Last Name:</label>
+          <input class="profile-input" type="text" id="last_name" disabled/>
+        </div>
+        <div class="form-row">
+          <label for="birthday">Date of Birth:</label>
+          <input class="profile-input" type="date" id="birthday" disabled/>
+        </div>
+        <div class="form-row">
+          <label for="phone">Phone:</label>
+          <input class="profile-input" type="tel" id="phone" disabled/>
+        </div>
+        <div class="form-row">
+          <label for="country">Country:</label>
+          <input class="profile-input" type="text" id="country" disabled/>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="button">
+        <input type="button" value="Edit Profile" id="edit-btn">
+        <input type="button" value="Save" id="save-btn">
+        <input type="button" value="Cancel" id="cancel-btn">
+      </div>
+    </div>
+  </div>
+
+  <!-- Script separado -->
+  <script src="js/config.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

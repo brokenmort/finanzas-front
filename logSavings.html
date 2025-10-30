@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plantilla Base</title>
+  <link rel="stylesheet" href="css/logSavings.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+ <!-- Confirm Changes Modal --> 
+    <div id="confirmModal" class="modal">
+         <div class="modal-content">
+             <p>Do you want to add this payment to your savings plan?</p> <button id="confirmChangesBtn">Confirm</button> <button id="cancelChangesBtn">Cancel</button>
+         </div>
+    </div> 
+    
+    <!-- Success Modal --> 
+     <div id="successModal" class="modal"> 
+        <div class="modal-content"> 
+            <p>The payment was registered successfully!</p> <button id="successOkBtn">Confirm</button> 
+        </div> 
+    </div>
+
+  <div class="top-bar">
+    <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+    <a href="home.html" class="home-icon"><i class="bi bi-house-fill"></i></a>
+  </div>
+  <!-- Contenedor principal -->
+  <div class="contenedor-padre">
+    <div class="contenedor">
+      <div class="username" dir="auto">
+        <div class="profile-image-preview" id="baseProfileImagePreview">
+          <i class="bi bi-person" id="baseProfileIcon"></i>
+          <img id="baseProfileImage" alt="Profile image" loading="eager" decoding="async">
+        </div>
+        <div class="profile-info">
+          <h1 id="displayName">Usuario</h1>
+        </div>
+      </div>
+
+      <div class="log-button"> 
+                    <input type="button" value="Savings Log" id="logDetails">
+                     <input type="button" value="History" id="history"> 
+            </div> 
+        <div class="log-form"> 
+            <form class="log-details"> 
+
+                     <div class="group"> 
+                        <label for="savings">Savings Goal:</label> 
+                     <div class="split-select"> <select id="savings" name="savings"> 
+                        <option value="savings1">Savings1</option> <option value="savings2">Savings2</option> <option value="savings3">Savings3</option> 
+                    </select> 
+                    </div> 
+                    </div>
+                    
+                    <div class="group"> 
+                        <label for="amount">Amount:</label> 
+                        <div class="info-box"> <input type="text" id="amount" name="amount" required>
+                        </div>
+                    </div> 
+
+                    <div class="group"> 
+                        <label for="date">Date:</label> 
+                        <div class="info-box"> <input type="date" id="date" name="date" required>
+                        </div>
+                    </div>
+            </form> 
+            
+            <div class="button">
+                <input type="submit" id="add-btn" value="Add"> 
+                <input type="button" id="cancel-btn" value="Cancel" onclick="location.href='savings.html'">
+            </div> 
+            
+            </div>
+
+            <div class="status-table">
+    <table>
+        <caption>CURRENT SAVINGS PLAN STATUS</caption>
+        <tr>
+            <th>Due Payment</th>
+            <th>Paid</th>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>0</td>
+        </tr>
+    </table>
+</div>
+            
+            <div class="history-table" style="display: none;">
+                    <div class="history-button"> <input type="button" value="Savings Log" id="logDetailsSelect"> <input type="button" value="History" id="historyTableSelect">
+                    </div>
+                        <table class="history-details">
+                    <tr>
+                        <th>Savings Goal</th>
+                        <th>Amount</th> <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td>Salary</td>
+                        <td>$500</td>
+                        <td>10-10-2025</td>
+                    </tr>
+                    <tr> 
+                        <td>Freelance Work</td> <td>$500</td>
+                        <td>09-12-2024</td>
+                    </tr> 
+                    <tr>
+                        <td>Investment Returns</td> <td>$500</td>
+                        <td>Weekly</td>
+                    </tr>
+                        </table>
+
+                        <div class="menu-list">
+                <label for="svng">Savings Goal:</label></br> <div class="split-select">
+                    <select id="svng" name="svng"> <option value="savings1">Savings1</option>
+                    <option value="savings2">Savings2</option>
+                    </select>
+                </div>
+
+                <label for="date">Date:</label></br> 
+                <div class="split-select"> 
+                    <select id="date" name="date"> <option value="date1">Date1</option>
+                    <option value="date1">Date2</option>
+                    </select>
+                </div>
+                <input type="submit" value="Search" id="search-btn"> 
+            </div>
+
+                </div>
+            
+        </div>
+    </div>
+    
+    <script>
+
+
+const logButton = document.querySelector('.log-button');
+const logForm = document.querySelector('.log-form');
+const statusTable = document.querySelector('.status-table');
+const historyTable = document.querySelector('.history-table');
+const historyBtn = document.getElementById('history');
+const logDetailsBtn = document.getElementById('logDetails');
+const logDetailsSelect = document.getElementById('logDetailsSelect');
+
+// Cuando se hace click en "History"
+historyBtn.onclick = function () {
+  historyTable.style.display = 'block';
+  logForm.style.display = 'none';
+  statusTable.style.display = 'none';
+  logButton.style.display = 'none'; // 🔥 ocultar botones principales
+};
+
+// Cuando se hace click en "Log Income" (arriba)
+logDetailsBtn.onclick = function () {
+  logForm.style.display = 'block';
+   statusTable.style.display = 'block';
+  historyTable.style.display = 'none';
+  logButton.style.display = 'flex'; // 🔥 mostrar botones de nuevo
+};
+
+// Cuando se hace click en "Log Income" dentro de history
+logDetailsSelect.onclick = function () {
+  logForm.style.display = 'block';
+   statusTable.style.display = 'block';
+  historyTable.style.display = 'none';
+  logButton.style.display = 'flex'; // 🔥 mostrar botones de nuevo
+};
+    
+    const addBtn = document.getElementById('add-btn');
+    const inputs = document.querySelectorAll('.profile-input');
+    let originalValues = {};
+    const confirmModal = document.getElementById('confirmModal');
+    const successModal = document.getElementById('successModal');
+    const confirmChangesBtn = document.getElementById('confirmChangesBtn');
+    const cancelChangesBtn = document.getElementById('cancelChangesBtn');
+    const successOkBtn = document.getElementById('successOkBtn');
+    addBtn.onclick = function () { 
+        // Show confirmation modal 
+        confirmModal.style.display = 'flex';
+    };
+    confirmChangesBtn.onclick = function () { 
+        // Apply changes
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+        confirmModal.style.display = 'none'; successModal.style.display = 'flex'; // Show success modal
+    };
+    cancelChangesBtn.onclick = function () { confirmModal.style.display = 'none'; // just close confirm modal
+    };
+    successOkBtn.onclick = function () { window.location.href = "savings.html";  
+    };
+    </script> 
+</body>
+</html>
+

@@ -1,0 +1,99 @@
+@import url(general.css);
+
+/* Reset y fondo */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  background-image: url(../image/background.jpg);
+  background-color: rgb(197, 195, 195);
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow-x: hidden;
+}
+
+/* Contenedor principal y tarjeta interna */
+.contenedor-padre {
+  background: linear-gradient(#606c3886, #90b067);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  min-width: 300px;
+  padding: 20px 30px;
+  border-radius: 20px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+.contenedor {
+  width: 100%;
+  background: rgba(222, 222, 222, 0.176);
+  border-radius: 50px;
+  padding: 30px;
+  box-shadow: 0px 10px 15px rgba(1,1,1,0.1);
+  box-sizing: border-box;
+}
+
+/* Encabezado con avatar + nombre */
+.username {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.profile-image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #a26127;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 3em;
+  color: #a26127;
+  flex-shrink: 0;
+}
+
+#baseProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: none;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+#displayName {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Área de contenido adaptable */
+#formContent {
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenedor-padre { padding: 16px; margin: 10px; }
+  .contenedor { padding: 16px; }
+  .username { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .profile-image-preview { width: 100px; height: 100px; }
+}
+

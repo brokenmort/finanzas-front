@@ -1,0 +1,151 @@
+/* Reset general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body principal */
+body {
+    width: 100%;              /* evita overflow por 100vw en móvil */
+    max-width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scroll global de toda la página */
+    display: flex;
+    flex-direction: column; /* Para que todo crezca verticalmente */
+    align-items: center;
+    justify-content: flex-start; /* Desde arriba */
+    padding: 20px;
+    background-image: url(../image/background.jpg);
+    background-color: rgb(197, 195, 195);
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-attachment: fixed;
+    font-family: "Lato", serif, sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* Contenedor padre */
+.contenedor-padre {
+    background: linear-gradient(#606c3886, #90b067);
+    display: flex;
+    flex-direction: column;
+    width: 100%;              /* usa todo el ancho disponible */
+    max-width: 450px;         /* no crece más de 450px */
+    min-width: 0;             /* permite reducirse en pantallas estrechas */
+    padding: 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin: 20px auto;
+    height: auto; /* Altura automática según contenido */
+    justify-content: flex-start; /* Empieza desde arriba */
+}
+
+/* Encabezado */
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: rgba(222, 222, 222, 0.176);
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.profile-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Contenedor interno del formulario */
+.contenedor {
+    flex-grow: 0; /* No fuerza altura */
+    overflow: visible; /* No scroll interno */
+    padding: 20px;
+    background: rgba(222, 222, 222, 0.176);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;              /* asegura que no exceda el padre */
+    box-sizing: border-box;   /* padding dentro del ancho */
+}
+
+/* Filas del formulario */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-row label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-row input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;   /* evita overflow por padding */
+    max-width: 100%;
+}
+
+/* Contenedor del botón */
+.button-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.button-container input {
+    width: auto;                 /* se ajusta al texto */
+    min-width: 60%;              /* mantiene apariencia en escritorio */
+    max-width: 100%;             /* no excede el contenedor */
+    border-radius: 50px;
+    padding: 15px 24px;          /* espacio lateral para textos traducidos */
+    background-color: #a26127;
+    color: #fefae0;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    line-height: normal;         /* evita recorte por line-height */
+    box-sizing: border-box;      /* respeta padding al calcular ancho */
+    white-space: nowrap;         /* mantiene el texto en una línea */
+}
+
+.button-container input:hover {
+    background-color: #dda15e;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .contenedor-padre {
+        width: 100%;
+        padding: 16px;        /* reduce padding para ganar espacio */
+    }
+    .contenedor {
+        padding: 16px;
+        gap: 12px;
+    }
+    .button-container input {
+        width: 100%;
+        min-width: 0;            /* en móvil ocupa el ancho disponible */
+    }
+}
+
+/* Ajustes extra para pantallas muy estrechas */
+@media (max-width: 360px) {
+    body { padding: 12px; }
+    .contenedor-padre { padding: 12px; margin: 12px auto; }
+    .contenedor { padding: 12px; gap: 10px; }
+    .form-row input { padding: 9px; }
+}

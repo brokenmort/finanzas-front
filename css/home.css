@@ -1,0 +1,208 @@
+@import url(general.css);
+
+/* --- RESETEO GENERAL --- */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Lato', sans-serif;
+  background-color: #283618; /* Fondo oscuro para resaltar elementos */
+}
+
+/* --- PERFIL --- */
+.profile {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fefae0;
+  background-color: #606c38;
+  border-radius: 0px 0px 10px 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30vw;
+  height: 60px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* --- BOTÓN DE CERRAR SESIÓN --- */
+.logout-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #dc3545;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 200;
+}
+.logout-btn:hover {
+  background-color: #b02a37;
+}
+
+/* Botón Admin (solo visible para staff/superuser) */
+.admin-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0d6efd; /* azul */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 200;
+}
+.admin-btn:hover { background-color: #0b5ed7; }
+
+/* Botón Admin (solo visible para staff/superuser) */
+/* (revert) sin botón Admin */
+
+/* --- BARRA INFERIOR --- */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 5px;
+  background-color: transparent;
+  padding: 0; /* sin separación respecto al borde inferior */
+}
+
+/* Asegura que cada enlace ocupe el mismo espacio y se estire */
+.bottom-bar > a {
+  flex: 1 1 0;
+  display: flex;
+}
+
+/* --- OPCIONES DE MENÚ --- */
+.wallet, .home, .report {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fefae0;
+  background-color: #606c38;
+  border-radius: 10px 10px 0px 0px;
+  padding: 15px;
+  margin: 0px;
+  width: 30vw;
+  height: 60px;
+  position: relative;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+}
+
+i {
+  font-size: 3em;
+  transition: transform 0.3s ease;
+}
+
+/* Avatar de perfil (igual comportamiento que en profile) */
+.profile-image-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #a26127;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 3em;
+  color: #a26127;
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+#homeProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: #fefae0;
+}
+
+/* --- EFECTOS HOVER --- */
+.wallet:hover,
+.home:hover,
+.report:hover {
+  background-color: #90b0675e;
+  padding: 50px;
+  height: 30vh;
+  justify-content: flex-start;
+}
+
+.profile:hover {
+  background-color: #90b0675e;
+  padding: 50px;
+  height: 30vh;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.hidden-text {
+  display: none;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fefae0;
+  margin-top: 5px;
+}
+
+.profile:hover .username,
+.profile:hover .hidden-text,
+.wallet:hover .hidden-text,
+.home:hover .hidden-text,
+.report:hover .hidden-text {
+  display: block;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.username {
+  display: none;
+  font-size: 1.2em;
+  color: #fefae0;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* --- MEDIA QUERY PARA MÓVILES --- */
+@media (max-width: 768px) {
+  .profile {
+    width: 90vw;
+    height: 50px;
+    padding: 10px;
+  }
+
+  /* Cada tarjeta ocupa todo el ancho disponible dentro de su enlace */
+  .wallet, .home, .report {
+    width: 100%;
+    height: clamp(64px, 10vh, 120px); /* proporción en pantallas pequeñas */
+    padding: 12px;
+  }
+
+  i {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+}

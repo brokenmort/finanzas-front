@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redireccionando...</title>
+  <!-- Redirección inmediata a la página principal -->
+  <meta http-equiv="refresh" content="0; url=/index.html">
+  <script>
+    // Preserva querystring y hash si los hay
+    (function(){
+      var target = '/index.html' + (location.search || '') + (location.hash || '');
+      try { window.location.replace(target); } catch(_) { window.location.href = target; }
+    })();
+  </script>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#1b1e23;color:#f0f0f0}
+    a{color:#dda15e}
+  </style>
+</head>
+<body>
+  <div>
+    <p>Redireccionando a la página principal...</p>
+    <p>Si no ocurre, <a href="/index.html">haz clic aquí</a>.</p>
+  </div>
+</body>
+</html>

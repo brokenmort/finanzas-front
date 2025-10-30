@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <link rel="stylesheet" href="css/wallet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sofia&family=Trocchi&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="top-bar">
+        <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+        <a href="home.html" class="home-icon">
+        <i class="bi bi-house-fill"></i></a>
+    </div>
+    <div class="contenedor-padre">
+        <div class="contenedor">
+            <div class="username">
+                <div class="profile-image-preview">
+                    <i class="bi bi-person" id="walletProfileIcon"></i>
+                    <img id="walletProfileImage" alt="Profile image" loading="eager" decoding="async">
+                </div>
+                <h2 id="walletUsername">Nombre</h2>
+            </div>
+            <h3>Wallet  Management</h3>
+             <div class="button">
+                <input type="button" value="Income" class="income-button" onclick="location.href='income.html'">
+                <input type="button" value="Expenses" class="expenses-button" onclick="location.href='expenses.html'">
+                <input type="button" value="Savings" class="savings-button" onclick="location.href='savings.html'">
+                <input type="button" value="Loans" class="loans-button" onclick="location.href='loans.html'">
+            </div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/wallet.js"></script>
+</body>
+</html>

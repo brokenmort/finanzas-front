@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Income</title>
+  <link rel="stylesheet" href="./css/logIncome.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head> 
+<body>
+  <!-- Confirm Modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <p>Do you want to log income?</p>
+      <button id="confirmChangesBtn">Confirm</button>
+      <button id="cancelChangesBtn">Cancel</button>
+    </div>
+  </div> 
+
+  <!-- Success Modal -->
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <p>The income was registered successfully!</p>
+      <button id="successOkBtn">Confirm</button>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+    <a href="./home.html" class="home-icon"><i class="bi bi-house-fill"></i></a>
+  </div>
+
+  <div class="contenedor-padre"> 
+    <div class="contenedor"> 
+      <div class="username" dir="auto">
+        <div class="profile-image-preview" id="baseProfileImagePreview">
+          <i class="bi bi-person" id="baseProfileIcon"></i>
+          <img id="baseProfileImage" alt="Profile image" loading="eager" decoding="async">
+        </div>
+        <div class="profile-info">
+          <h1 id="displayName">Usuario</h1>
+        </div>
+      </div>
+
+      <!-- Botones de vista -->
+      <div class="log-button"> 
+        <input type="button" value="Log Income" id="logDetails">
+        <input type="button" value="History" id="history"> 
+      </div> 
+
+      <!-- Formulario Log Income -->
+      <div class="log-form">
+        <form class="log-details">
+          <div class="group"> 
+            <label for="income">Income Type:</label> 
+            <div class="split-select">
+              <select id="income" name="income"></select>
+            </div> 
+          </div>
+
+          <div class="group"> 
+            <label for="amount">Amount:</label> 
+            <div class="info-box">
+              <input type="number" id="amount" name="amount" readonly required>
+            </div>
+          </div> 
+
+          <div class="group"> 
+            <label for="date">Date:</label> 
+            <div class="info-box">
+              <input type="date" id="date" name="date" required>
+            </div>
+          </div>
+        </form> 
+
+        <div class="button">
+          <input type="submit" id="save-btn" value="Save"> 
+          <input type="button" id="cancel-btn" value="Cancel" onclick="location.href='./income.html'">
+        </div>
+      </div>
+
+      <!-- Tabla de Historial -->
+      <div class="history-table" style="display: none;">
+        <div class="history-button">
+          <input type="button" value="Log Income" id="logDetailsSelect">
+          <input type="button" value="History" id="historyTableSelect">
+        </div>
+
+        <table class="history-details">
+          <thead>
+            <tr>
+              <th>Income</th>
+              <th>Amount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+
+        <!-- Filtros debajo de la tabla -->
+        <div class="menu-list">
+          <label for="filterIncome">Income:</label><br>
+          <div class="split-select">
+            <select id="filterIncome" name="filterIncome">
+              <option value="">-- All --</option>
+            </select>
+          </div>
+
+          <label for="filterDate">Date:</label><br>
+          <div class="split-select">
+            <select id="filterDate" name="filterDate">
+              <option value="">-- All --</option>
+            </select>
+          </div>
+
+          <input type="submit" value="Search" id="search-btn">
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <script src="js/config.js"></script>
+  <script src="js/logIncome.js"></script>
+</body>
+</html>

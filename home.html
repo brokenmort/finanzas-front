@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="css/home.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    .logout-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #dc3545;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .logout-btn:hover {
+      background-color: #b02a37;
+    }
+  </style>
+</head>
+<body>
+ 
+
+  <!-- Perfil -->
+  <a href="profile.html">
+    <div class="profile">
+      <button class="admin-btn" id="adminBtn" style="display:none" title="Administración">Admin</button>
+      <div class="username" id="username">Usuario</div>
+      <div class="profile-image-preview" id="homeProfileImagePreview">
+        <i class="bi bi-person" id="homeProfileIcon"></i>
+        <img id="homeProfileImage" alt="Profile image" loading="eager" decoding="async">
+      </div>
+      <div class="hidden-text">PROFILE</div>
+       <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+  </a>
+
+  <!-- Menú inferior -->
+  <div class="bottom-bar">
+    <a href="wallet.html">
+      <div class="wallet">
+        <i class="bi bi-cash-coin"></i>
+        <div class="hidden-text">WALLET</div>
+      </div>
+    </a>
+    <a href="#">
+      <div class="home">
+        <i class="bi bi-house-fill"></i>
+        <div class="hidden-text">HOME</div>
+      </div>
+    </a>
+    <a href="report.html">
+      <div class="report">
+        <i class="bi bi-clipboard-data-fill"></i>
+        <div class="hidden-text">REPORT</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Asociamos el JS externo -->
+  <script src="js/config.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

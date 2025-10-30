@@ -1,0 +1,150 @@
+@import url(general.css);
+
+/* Contenedor padre */
+div.contenedor-padre {
+    background: linear-gradient(#606c38b2, #90b067ad); /* Fondo degradado */
+    display: flex;
+    flex-direction: column;
+    width: 30vw;           /* Ancho en pantallas grandes */
+    max-width: 30vw;       /* Máximo ancho en escritorio */
+    min-width: 300px;      /* Evita que se achique demasiado */
+    padding: 30px;         /* Espacio interno */
+    height: auto;          /* Se adapta al contenido */
+    min-height: 100vh;     /* Llena la pantalla si contenido es pequeño */
+    border-radius: 0px 20px 20px 0px; /* Bordes redondeados a la derecha */
+    box-sizing: border-box;
+    margin: 0;             /* Siempre pegado a la izquierda */
+    overflow-x: hidden;    /* Evita scroll horizontal */
+}
+
+/* Contenedor interno */
+.contenedor {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 90%;            /* Ajusta el ancho relativo dentro del padre */
+    max-width: 100%;       /* Nunca excede el contenedor padre */
+    padding: 30px;
+    height: auto;          /* Se adapta al contenido */
+    background: rgba(222, 222, 222, 0.176); /* Fondo semitransparente */
+    border-radius: 50px;   /* Bordes redondeados */
+    box-sizing: border-box;
+    box-shadow: 0px 10px 3px 10px rgba(1, 1, 1, 0.1); /* Sombra */
+}
+
+.contenedor p {
+    text-align: center;
+}
+
+.contenedor p a {
+    color: whitesmoke;
+    text-shadow: 5px 5px 3px rgba(1, 1, 1, 0.2);
+    font-size: smaller;
+    padding: 0px;
+    cursor: pointer;
+}
+
+/* Credenciales */
+.contenedor .credentials label {
+    color: #dfa86a;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    max-width: 25%;       /* Ancho en escritorio */
+}
+
+.contenedor .credentials input {
+    border-radius: 100px;
+    width: 100%;           /* Siempre ocupa todo el ancho disponible */
+    padding: 15px 0px;
+    color: #fff;
+    background-color: rgba(222, 222, 222, 0.3);
+    border: none;
+    margin: 5px 0px 10px;
+    text-align: center;
+    box-shadow: 0px 5px 3px 5px rgba(1, 1, 1, 0.1);
+}
+
+.contenedor .credentials input:focus {
+    outline: none;
+    box-shadow: 0px 5px 3px 5px rgba(1, 1, 1, 0.2);
+    background-color: rgba(222, 222, 222, 0.45);
+}
+
+/* Botones */
+.contenedor .button input {
+    width: 60%;              /* Botón más ancho en escritorio */
+    border-radius: 500px;
+    padding: 15px 15px;
+    display: block;
+    margin: 10px auto;
+    background-color: #a26127;
+    color: #fefae0;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+}
+
+.contenedor .button a {
+    text-decoration: none;
+}
+
+.contenedor .button input:hover {
+    background-color: #dda15e;
+    transition: 0.3s;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    html, body {
+        overflow: hidden; /* Evita scroll horizontal y vertical */
+        width: 100vw;     
+        height: 100vh;    
+        margin: 0;
+        padding: 0;
+    }
+
+    div.contenedor-padre {
+        width: 95vw;          /* Ajusta ancho al viewport móvil */
+        max-width: 95vw;      /* Nunca excede el ancho de la pantalla */
+        height: 100vh;        /* Ajusta exactamente al alto del viewport */
+        padding: 15px;        /* Padding más pequeño para móvil */
+        border-radius: 25px;  /* Bordes redondeados */
+        margin: 0 auto;       /* Centrado horizontal */
+        display: flex;
+        justify-content: center; /* Centrado vertical */
+        align-items: center;     /* Centrado horizontal */
+        overflow: hidden;        /* Evita scroll horizontal y vertical */
+    }
+
+    .contenedor {
+        width: 100%;          /* Ocupa todo el ancho disponible */
+        max-width: 350px;     /* Limita ancho máximo */
+        padding: 15px;        /* Padding interno reducido */
+        border-radius: 25px;
+        box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Centrado vertical dentro del padre */
+        align-items: center;     /* Centrado horizontal */
+        height: auto;            /* Se adapta al contenido */
+        overflow: hidden;        /* Evita que los elementos se salgan */
+        gap: 12px;               /* Espacio proporcional */
+    }
+
+    .contenedor .credentials label {
+        max-width: 100%;      /* Ajusta labels al ancho del contenedor */
+        font-size: 14px;      /* Texto más pequeño */
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .contenedor .credentials input {
+        width: 90%;           /* Inputs más angostos para móvil */
+        padding: 12px;        /* Padding reducido */
+    }
+
+    .contenedor .button input {
+        width: 70%;           /* Botón más angosto */
+        padding: 12px;
+    }
+}

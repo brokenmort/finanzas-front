@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresos</title>
+    <link rel="stylesheet" href="css/income.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Sofia&family=Trocchi&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="top-bar">
+        <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+        <a href="home.html" class="home-icon">
+            <i class="bi bi-house-fill"></i>
+        </a>
+    </div>
+    <div class="contenedor-padre">
+        <div class="contenedor">
+            <div class="username">
+                <div class="profile-image-preview">
+                    <i class="bi bi-person" id="walletProfileIcon"></i>
+                    <img id="walletProfileImage" alt="Profile image" loading="eager" decoding="async">
+                </div>
+                <h2 id="incomeUsername">Nombre</h2>
+            </div>
+
+            <!-- Fixed income table -->
+            <div id="fixView" class="tab-view">
+              <div class="table-wrap">
+                <table class="fixed-table">
+                  <div class="tabs">
+                    <input type="button" value="Fixed Income" id="fixIncm">
+                    <input type="button" value="Supplemental Income" id="suppIncm" onclick="switchTab('supp')">
+                  </div>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Reason</th>
+                      <th>Quantity</th>
+                      <th>Period</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                
+                <!-- Filtros FIX -->
+                <div class="menu-list">
+                  <label for="fixFilter1" id="fixFilter1-label">Name:</label></br>
+                  <div class="split-select">
+                    <select id="fixFilter1" name="fixFilter1">
+                        <option value="">-- All --</option>
+                    </select>
+                  </div>
+                  <label for="fixFilter2" id="fixFilter2-label">Period:</label></br>
+                  <div class="split-select">
+                    <select id="fixFilter2" name="fixFilter2">
+                        <option value="">-- All --</option>
+                    </select>
+                  </div>
+                  <input type="submit" value="Search" id="fixSearchBtn">
+                </div>
+
+                <div class="button">
+                    <input type="button" value="Add New Income" id="Add-btn" onclick="location.href='newIncome.html'">
+                    <input type="button" id="Log-btn" value="Log Income" onclick="location.href='logIncome.html'">
+                </div>
+              </div>
+            </div>
+
+            <!-- Supplemental income table -->
+            <div id="suppView" class="tab-view" style="display: none;">
+              <div class="table-wrap">
+                <table class="supp-table">
+                  <div class="tabs">
+                    <input type="button" value="Fixed Income" id="fixIncmSelect" onclick="switchTab('fix')">
+                    <input type="button" value="Supplemental Income" id="suppIncmSelect">
+                  </div>
+                  <thead>
+                    <tr>
+                      <th>Income</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                
+                <!-- Filtros SUPP -->
+                <div class="menu-list">
+                  <label for="suppFilter1" id="suppFilter1-label">Income:</label></br>
+                  <div class="split-select">
+                    <select id="suppFilter1" name="suppFilter1">
+                        <option value="">-- All --</option>
+                    </select>
+                  </div>
+                  <label for="suppFilter2" id="suppFilter2-label">Date:</label></br>
+                  <div class="split-select">
+                    <select id="suppFilter2" name="suppFilter2">
+                        <option value="">-- All --</option>
+                    </select>
+                  </div>
+                  <input type="submit" value="Search" id="suppSearchBtn">
+                </div>
+
+                <div class="button">
+                    <input type="button" value="Add New Income" id="Add-btn" onclick="location.href='newSuppIncome.html'">
+                </div>
+              </div>
+            </div>
+            
+        </div>
+    </div>     
+    
+    <script src="js/config.js"></script>
+    <script src="js/income.js"></script>
+</body>
+</html>

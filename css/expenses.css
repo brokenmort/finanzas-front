@@ -1,0 +1,261 @@
+@import url(general.css);
+
+/* Reset y fondo */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  background-image: url(../image/background.jpg);
+  background-color: rgb(197, 195, 195);
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow-x: hidden;
+}
+
+/* Contenedor principal y tarjeta interna */
+.contenedor-padre {
+  background: linear-gradient(#606c3886, #90b067);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  min-width: 300px;
+  padding: 20px 30px;
+  border-radius: 20px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+.contenedor {
+  width: 100%;
+  background: rgba(222, 222, 222, 0.176);
+  border-radius: 50px;
+  padding: 30px;
+  box-shadow: 0px 10px 15px rgba(1,1,1,0.1);
+  box-sizing: border-box;
+}
+
+/* Encabezado con avatar + nombre */
+.username {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.profile-image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #a26127;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 3em;
+  color: #a26127;
+  flex-shrink: 0;
+}
+
+#baseProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: none;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+#displayName {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Área de contenido adaptable */
+.contenedor h2{
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.contenedor h3{
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #fefae0;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+    text-shadow: 2px 2px 1px rgba(1, 1, 1, 0.2);
+}
+.contenedor .button input{
+   width: 25%;
+   border-radius: 500px;
+   padding: 15px 15px;
+   margin: 10px 0;
+   background-color: #a26127;
+   color: #fefae0;
+   border: none;
+   cursor: pointer;
+   box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+   box-sizing: border-box;
+}
+.button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.contenedor .button input:hover{
+    background-color: #dda15e;
+    transition: 0.3s;
+}
+table{
+   width: 100%;
+   box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+    border-collapse: separate;
+    border-radius: 15px;
+    border-spacing: 0;
+    overflow: hidden;
+    margin: 0px 0px 20px 0px;
+}
+th{
+    color: #DDA15E;
+    background-color: #778647;
+    padding: 20px;
+    text-align: center;
+}
+td{
+    background-color: #dceda19a;
+    padding: 20px;
+    text-align: center;
+}
+.contenedor .menu-list{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+}
+label{
+    display: block;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0;
+    font-weight: bold;
+}
+.split-select {
+  position: relative;
+  display: inline-block;
+  width: 220px;
+  font-weight: bold;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+}
+
+/* The dropdown itself */
+.split-select select {
+  width: 100%;
+  padding: 10px 50px 10px 20px; /* leave space for arrow */
+  border: none;
+  border-radius: 50px;
+  background: #fefae0;
+  color: #0c0c0c;
+  cursor: pointer;
+  font-size: 14px;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Arrow box */
+.split-select::after {
+  content: "▼"; /* you can replace with SVG */
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;           /* size of arrow area */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fefae0;
+  color: #a26127;
+  pointer-events: none;  /* keeps select clickable */
+  transition: 0.5s;
+}
+.split-select select:focus {
+  background: #fdf5d0aa;
+  outline: none;
+}
+#search-btn{
+    width: 20%;
+    border-radius: 500px;
+    padding: 15px 15px;
+    margin: 10px auto;
+    background-color: #a26127;
+    color: #fefae0;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
+}
+#search-btn:hover{
+    background-color: #dda15e;
+    transition: 0.3s;
+}
+.varExpense input,
+.fixExpense input,
+#varExp,
+#fixExp {
+    width: 30%;
+    padding: 15px;
+    margin: 20px 0px 0px 0px;
+    display: inline;
+    border-radius: 20px 20px 0px 0px;
+    background-color: #606C38;
+    color: #0c0c0c;
+    border: none;
+    cursor: pointer;
+}
+#fixExpSelect,
+#fixExp {
+    margin-left: 5px;
+}
+#varExp:hover,
+#fixExpSelect:hover{
+    background-color: #dceda19a;
+    transition: 0.5s;
+}
+#fixExpSelect,
+#varExp {
+   background-color: #606c389f;
+}
+.varExpense,
+.fixIncome {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenedor-padre { padding: 16px; margin: 10px; }
+  .contenedor { padding: 16px; }
+  .username { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .profile-image-preview { width: 100px; height: 100px; }
+}
+

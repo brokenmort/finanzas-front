@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuevo Gasto Variable</title>
+  <link rel="stylesheet" href="css/newExtraExp.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Confirm Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <p id="confirmText">Do you want to add extra expense?</p>
+    <button id="confirmChangesBtn">Confirm</button>
+    <button id="cancelChangesBtn">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal">
+  <div class="modal-content">
+    <p id="successText">The extra expense was saved successfully!</p>
+    <button id="successOkBtn">Confirm</button>
+  </div>
+</div>
+
+<div class="top-bar">
+  <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
+  <a href="home.html" class="home-icon"><i class="bi bi-house-fill"></i></a>
+</div>
+
+<div class="contenedor-padre">
+  <div class="contenedor">
+    <div class="username">
+      <div class="profile-image-preview" id="baseProfileImagePreview">
+        <i class="bi bi-person" id="baseProfileIcon"></i>
+        <img id="baseProfileImage" alt="Profile image" loading="eager" decoding="async">
+      </div>
+      <div class="profile-info">
+        <h1 id="displayName">Usuario</h1>
+      </div>
+    </div>
+
+    <div class="expense-form">
+      <form>
+        <div class="expense-details">
+
+          <div class="group">
+            <label for="expenseType">Expense Type:</label>
+            <div class="info-box">
+              <input type="text" id="expenseType" name="expenseType" required>
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="description">Description:</label>
+            <div class="info-box">
+              <input type="text" id="description" name="description" required>
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="amount">Amount:</label>
+            <div class="info-box">
+              <input type="number" id="amount" name="amount" required>
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="date">Date:</label>
+            <div class="info-box">
+              <input type="date" id="date" name="date" required>
+            </div>
+          </div>
+        </div>
+      </form> 
+    </div>
+
+    <div class="button">
+      <input type="submit" id="add-btn" value="Add Extra Expense">
+      <input type="button" id="cancel-btn" value="Cancel" onclick="location.href='expenses.html'">
+      <input type="button" id="delete-btn" value="Delete" style="display:none; background:#d9534f; color:white;">
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/newExtraExp.js"></script>
+
+</body>
+</html>
