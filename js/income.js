@@ -1,10 +1,13 @@
-// income.js
-// Front desacoplado hablando con API en Render.
-// Cambios clave:
-// - Usa window.API_BASE (inyectado en js/config.js), no window.location.origin.
-// - authFetch() añade Authorization y redirige al login si hay 401.
-// - Descubre y cachea el endpoint "me" entre varias rutas comunes.
-// - Resolver de imagen (absoluta o relativa al backend).
+// income.js (LOCAL)
+// ✅ CAMBIOS PRINCIPALES vs tu versión anterior:
+// 1) API_BASE: ya NO usamos window.location.origin (apunta al FRONT).
+//    -> usamos window.API_BASE (config.js) y fallback a http://127.0.0.1:8000
+// 2) Se elimina discovery de endpoints (discoverOnce + candidates).
+//    -> endpoint real: GET /api/auth/me/
+// 3) Se elimina authFetch propio.
+//    -> usamos window.apiFetch() (config.js) que agrega Bearer automáticamente.
+// 4) Todas las llamadas a endpoints ahora usan paths "/api/..." (sin concatenar API_BASE).
+// 5) Manejo consistente de 401/403: limpia sesión y redirige al login.
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 0) Autenticación básica
@@ -14,23 +17,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 1) BASE del API: viene de js/config.js
+  // ✅ MODIFICADO: base del API desde config.js (solo para resolver media/urls absolutas)
   const API_BASE =
-    typeof window.API_BASE === "string" && window.API_BASE
+    (typeof window.API_BASE === "string" && window.API_BASE)
       ? window.API_BASE
-      : window.location.origin;
+      : "http://127.0.0.1:8000";
+
+  // ✅ MODIFICADO: endpoint fijo para perfil
+  const ME_URL = "/api/auth/me/";
+
+  // ✅ NUEVO: helper de auth error
+  const handleAuthError = () => {
+    sessionStorage.clear();
+    window.location.href = "index.html";
+  };
 
   // 2) Elementos de perfil en la barra superior
   const nameEl = document.getElementById("incomeUsername");
   const iconEl = document.getElementById("walletProfileIcon");
   const imgEl  = document.getElementById("walletProfileImage");
 
-  // 3) Helpers
+  // 3) Helpers UI
   const showIconFallback = () => {
     if (imgEl)  imgEl.style.display  = "none";
     if (iconEl) iconEl.style.display = "block";
   };
 
+  // ✅ MODIFICADO: normaliza URL de imagen (absoluta vs relativa al backend)
   const resolveImageUrl = (raw) => {
     if (!raw) return null;
     const s = String(raw).trim();
@@ -40,53 +53,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${API_BASE}${path}`; // relativa al backend (/media/…)
   };
 
-  async function authFetch(url, options = {}) {
-    const resp = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-        ...(options.headers || {}),
-      },
-    });
-    if (resp.status === 401) {
-      sessionStorage.clear();
-      window.location.href = "index.html";
+  // ✅ MODIFICADO: fetchMe usando apiFetch (sin discovery)
+  async function fetchMe() {
+    const res = await window.apiFetch(ME_URL, { method: "GET" });
+
+    if (res.status === 401 || res.status === 403) {
+      handleAuthError();
       throw new Error("No autorizado");
     }
-    return resp;
-  }
 
-  async function discoverOnce(key, candidates) {
-    const cached = sessionStorage.getItem(key);
-    if (cached) return cached;
-
-    for (const url of candidates) {
-      try {
-        const r = await authFetch(url, { method: "GET" });
-        if (r.ok) {
-          sessionStorage.setItem(key, url);
-          return url;
-        }
-      } catch {
-        // probar siguiente candidato
-      }
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      throw new Error(`Error al cargar perfil: ${res.status} ${t}`);
     }
-    // si ninguno responde OK, devolvemos el primero (hará visible el error)
-    return candidates[0];
-  }
 
-  async function fetchMe() {
-    const ME_KEY = "endpoint_me";
-    const candidates = [
-      `${API_BASE}/api/auth/me/`,
-      `${API_BASE}/api/users/me/`,
-      `${API_BASE}/api/me/`,
-      `${API_BASE}/api/user/me/`,
-    ];
-    const meUrl = await discoverOnce(ME_KEY, candidates);
-    const res = await authFetch(meUrl);
-    if (!res.ok) throw new Error("No autorizado");
     return res.json();
   }
 
@@ -97,26 +77,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const url = resolveImageUrl(me && me.profile_image);
     if (url && imgEl && iconEl) {
-      imgEl.onload = () => { imgEl.style.display = "block"; iconEl.style.display = "none"; };
+      imgEl.onload = () => {
+        imgEl.style.display = "block";
+        iconEl.style.display = "none";
+      };
+
       imgEl.onerror = async () => {
-        // si falla carga directa (media protegida), intenta fetch+blob
+        // Si falla carga directa (media protegida), intenta fetch+blob con Bearer
         try {
           const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
           if (!r.ok) throw new Error("fetch image not ok");
           const blob = await r.blob();
           const objUrl = URL.createObjectURL(blob);
           imgEl.src = objUrl;
-          imgEl.onload = () => { imgEl.style.display = "block"; iconEl.style.display = "none"; };
+          imgEl.onload = () => {
+            imgEl.style.display = "block";
+            iconEl.style.display = "none";
+          };
         } catch {
           showIconFallback();
         }
       };
+
       imgEl.src = url + (url.includes("?") ? `&t=${Date.now()}` : `?t=${Date.now()}`);
     } else {
       showIconFallback();
     }
-  } catch {
-    // si hay 401, authFetch ya nos llevó al login
+  } catch (e) {
+    // Si hay 401/403 ya redirigimos; si no, log.
+    console.error("[income] error perfil:", e);
     return;
   }
 
@@ -125,25 +114,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   let allExtra = [];
   let currentTab = "fix"; // por defecto
 
+  // ✅ MODIFICADO: carga usando apiFetch con paths
   async function loadIngresos() {
     try {
       // Ingresos Fijos
-      const resFijos = await authFetch(`${API_BASE}/api/IngresosFijos/`, { method: "GET" });
+      const resFijos = await window.apiFetch("/api/IngresosFijos/", { method: "GET" });
+      if (resFijos.status === 401 || resFijos.status === 403) return handleAuthError();
       if (resFijos.ok) {
         allFijos = await resFijos.json();
         renderFijos(allFijos);
         if (currentTab === "fix") fillFiltersFix(allFijos);
+      } else {
+        console.warn("[income] IngresosFijos no ok:", resFijos.status);
       }
 
       // Ingresos Extra
-      const resExtra = await authFetch(`${API_BASE}/api/IngresosExtra/`, { method: "GET" });
+      const resExtra = await window.apiFetch("/api/IngresosExtra/", { method: "GET" });
+      if (resExtra.status === 401 || resExtra.status === 403) return handleAuthError();
       if (resExtra.ok) {
         allExtra = await resExtra.json();
         renderExtra(allExtra);
         if (currentTab === "supp") fillFiltersSupp(allExtra);
+      } else {
+        console.warn("[income] IngresosExtra no ok:", resExtra.status);
       }
     } catch (err) {
-      console.error("Error cargando ingresos:", err);
+      console.error("[income] Error cargando ingresos:", err);
     }
   }
 

@@ -1,9 +1,13 @@
-// home.js
-// Home con API desacoplada (Render). Sin dominios hardcodeados.
-// - Usa window.API_BASE inyectado por js/config.js
-// - Descubre y cachea el endpoint "me" (varios nombres posibles)
-// - Maneja 401 (token expirado) → redirige al login
-// - Muestra botón Admin solo si es staff/superuser y apunta a API_BASE/admin/
+// home.js (LOCAL)
+// ✅ CAMBIOS vs tu versión anterior:
+// 1) Ya NO usamos window.location.origin como fallback (eso apunta al host del FRONT).
+//    -> usamos window.API_BASE (config.js) y si no existe, caemos a http://127.0.0.1:8000
+// 2) Ya NO "descubrimos" endpoints con varios candidatos.
+//    -> usamos el endpoint REAL de tu API: GET /api/auth/me/
+// 3) Ya NO usamos authFetch propio.
+//    -> usamos window.apiFetch() (config.js), que ya adjunta Bearer automáticamente.
+// 4) Si el token no existe o expira (401/403), limpiamos sesión y redirigimos a index.html.
+// 5) Para profile_image: si la URL viene relativa, la convertimos contra API_BASE.
 
 document.addEventListener("DOMContentLoaded", () => {
   // 0) Autenticación básica
@@ -13,11 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // 1) BASE del API: viene de js/config.js
+  // ✅ MODIFICADO: base del API SIEMPRE desde config.js
   const API_BASE =
-    typeof window.API_BASE === "string" && window.API_BASE
+    (typeof window.API_BASE === "string" && window.API_BASE)
       ? window.API_BASE
-      : window.location.origin;
+      : "http://127.0.0.1:8000";
+
+  // ✅ MODIFICADO: endpoint fijo (tu router actual)
+  const ME_URL = "/api/auth/me/";
 
   // 2) Elementos de UI
   const profileIcon  = document.getElementById("homeProfileIcon");
@@ -32,94 +39,77 @@ document.addEventListener("DOMContentLoaded", () => {
     if (profileIcon) profileIcon.style.display = "block";
   };
 
+  // ✅ MODIFICADO: normaliza URL de imagen (absoluta vs relativa)
   const resolveImageUrl = (raw) => {
     if (!raw) return null;
     const s = String(raw).trim();
     if (!s) return null;
-    if (/^https?:\/\//i.test(s)) return s; // absoluta (p.ej. Cloudinary)
+    if (/^https?:\/\//i.test(s)) return s;     // absoluta (Cloudinary, etc.)
     const path = s.startsWith("/") ? s : `/${s}`;
-    return `${API_BASE}${path}`;           // relativa al backend (e.g. /media/…)
+    return `${API_BASE}${path}`;               // relativa al backend (/media/...)
   };
 
-  // 4) fetch con auth + manejo 401
-  async function authFetch(url, options = {}) {
-    const resp = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-        ...(options.headers || {}),
-      },
-    });
-    if (resp.status === 401) {
-      sessionStorage.clear();
-      window.location.href = "index.html";
+  // ✅ NUEVO: manejar 401/403 consistente en todas las llamadas
+  const handleAuthError = () => {
+    sessionStorage.clear();
+    window.location.href = "index.html";
+  };
+
+  // ✅ MODIFICADO: usa apiFetch (incluye Authorization automáticamente)
+  async function fetchMe() {
+    const res = await window.apiFetch(ME_URL, { method: "GET" });
+
+    // Si expiró el token o no autorizado, vuelve al login
+    if (res.status === 401 || res.status === 403) {
+      handleAuthError();
       throw new Error("No autorizado");
     }
-    return resp;
-  }
 
-  // 5) Descubridor de endpoints (cache en sessionStorage)
-  async function discoverOnce(key, candidates) {
-    const cached = sessionStorage.getItem(key);
-    if (cached) return cached;
-
-    for (const url of candidates) {
-      try {
-        const r = await authFetch(url, { method: "GET" });
-        if (r.ok) {
-          sessionStorage.setItem(key, url);
-          return url;
-        }
-      } catch {
-        // prueba siguiente candidato
-      }
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      throw new Error(`Error al cargar perfil: ${res.status} ${t}`);
     }
-    // si ninguno fue OK, devolvemos el primero para que el error sea visible
-    return candidates[0];
-  }
 
-  // 6) Perfil (me) con nombres alternativos
-  async function fetchMe() {
-    const ME_KEY = "endpoint_me";
-    const candidates = [
-      `${API_BASE}/api/auth/me/`,
-      `${API_BASE}/api/users/me/`,
-      `${API_BASE}/api/me/`,
-      `${API_BASE}/api/user/me/`,
-    ];
-    const meUrl = await discoverOnce(ME_KEY, candidates);
-    const res = await authFetch(meUrl);
-    if (!res.ok) throw new Error("No autorizado");
     return res.json();
   }
 
-  // 7) Establecer imagen de perfil (con fallback y modo “fetch blob” si 403 en media)
+  // 7) Establecer imagen de perfil (con fallback)
   let userId = null;
+
   const setProfileImageFromUrl = async (rawUrl) => {
     const absUrl = resolveImageUrl(rawUrl);
-    if (!absUrl) { showIconFallback(); return; }
+    if (!absUrl) {
+      showIconFallback();
+      return;
+    }
 
-    if (profileIcon)  profileIcon.style.display  = "none";
+    if (profileIcon) profileIcon.style.display = "none";
     if (profileImage) profileImage.style.display = "block";
 
+    if (!profileImage) return;
+
+    // Cache-buster para que no quede imagen vieja en el browser
     const directUrl = absUrl + (absUrl.includes("?") ? `&t=${Date.now()}` : `?t=${Date.now()}`);
 
-    if (!profileImage) return; // defensa
+    // Si falla carga directa, intentamos fetch+blob con Bearer (por si media requiere auth)
     profileImage.onerror = async () => {
       try {
-        // si falla la carga directa (p.ej. media privada), intentamos con fetch+blob
-        const res = await fetch(absUrl, { headers: { Authorization: `Bearer ${token}` } });
-        if (!res.ok) throw new Error("fetch image not ok");
+        const res = await fetch(absUrl, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error("No se pudo descargar la imagen");
+
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         profileImage.src = url;
+
         profileImage.onload = () => {
           profileImage.style.display = "block";
           if (profileIcon) profileIcon.style.display = "none";
         };
       } catch {
-        // Intentar cache local por userId
+        // último intento: cache local por userId
         try {
           const k = userId ? `profileImage:${userId}` : null;
           if (k) {
@@ -137,10 +127,12 @@ document.addEventListener("DOMContentLoaded", () => {
         showIconFallback();
       }
     };
+
     profileImage.onload = () => {
       profileImage.style.display = "block";
       if (profileIcon) profileIcon.style.display = "none";
     };
+
     profileImage.src = directUrl;
   };
 
@@ -148,8 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchMe()
     .then((data) => {
       try { if (data && data.id) userId = data.id; } catch {}
+
+      // Nombre visible (prioriza first_name, si no email)
       if (usernameEl) usernameEl.textContent = (data.first_name || data.email || "Usuario");
 
+      // Imagen
       if (data && data.profile_image) {
         setProfileImageFromUrl(data.profile_image);
       } else {
@@ -169,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch { showIconFallback(); }
       }
 
-      // Botón Admin solo para staff/superuser
+      // ✅ MODIFICADO: Botón Admin solo para staff/superuser (tus serializers lo exponen)
       try {
         if (adminBtn) {
           const isAdmin = !!(data && (data.is_staff || data.is_superuser));
@@ -178,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
             adminBtn.addEventListener("click", (e) => {
               e.preventDefault();
               e.stopPropagation();
-              // 👉 importante: admin del BACKEND (API), no del dominio del front
+              // Admin del BACKEND
               window.location.href = `${API_BASE}/admin/`;
             });
           } else {
@@ -188,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch {}
     })
     .catch((err) => {
-      console.error("Error al cargar datos:", err);
-      // Si aquí recibimos un 401, authFetch ya redirigió al login.
+      console.error("[home] Error al cargar datos:", err);
+      // Si fue 401/403 ya redirigimos en fetchMe()
     });
 
   // 9) Logout
@@ -197,11 +192,11 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutBtn.addEventListener("click", (e) => {
       try { e.preventDefault(); e.stopPropagation(); } catch {}
       sessionStorage.removeItem("authToken");
-      sessionStorage.removeItem("firstName");
+      sessionStorage.removeItem("refreshToken");
+      sessionStorage.removeItem("username");
       window.location.href = "index.html";
     });
   }
 
-  // Log útil
-  console.info("[home] API_BASE:", API_BASE);
+  console.info("[home] API_BASE:", API_BASE, "ME_URL:", ME_URL);
 });
