@@ -274,7 +274,7 @@ label{
   background: #fdf5d0aa;
   outline: none;
 }
-#search-btn{ 
+#suppSearchBtn, #fixSearchBtn { 
     width: 20%;
     border-radius: 500px;
     padding: 15px 15px;
@@ -285,7 +285,7 @@ label{
     cursor: pointer;
     box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
 }
-#search-btn:hover{
+#suppSearchBtn:hover, #fixSearchBtn:hover{
     background-color: #dda15e;
     transition: 0.3s;
 }

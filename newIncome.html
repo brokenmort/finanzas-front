@@ -28,6 +28,23 @@
     </div>
   </div>
 
+      <!-- Delete Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <p id="deleteText">¿Deseas eliminar este ingreso?</p>
+      <button id="deleteConfirmBtn">Confirmar</button>
+      <button id="deleteCancelBtn">Cancelar</button>
+    </div>
+  </div>
+
+    <!-- Delete Success Modal -->
+  <div id="deleteSuccessModal" class="modal">
+    <div class="modal-content">
+      <p id="deleteSuccessText">¡El ingreso se eliminó correctamente!</p>
+      <button id="deleteSuccessOkBtn">Aceptar</button>
+    </div>
+  </div>
+
   <!-- Barra superior -->
   <div class="top-bar">
     <img src="icons/backArrow.png" alt="Back" class="backArrow" onclick="history.back()">
@@ -90,7 +107,7 @@
       <div class="button">
         <input type="submit" id="add-btn" value="Agregar Ingreso">
         <input type="button" id="cancel-btn" value="Cancelar" onclick="location.href='income.html'">
-        <input type="button" id="delete-btn" value="Eliminar" style="display:none; background:#d9534f; color:white;">
+        <input type="button" id="delete-btn" value="Eliminar">
       </div>
     </div>
   </div>

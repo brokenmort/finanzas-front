@@ -24,11 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const deleteBtn = document.getElementById("delete-btn");
   const confirmModal = document.getElementById('confirmModal');
   const successModal = document.getElementById('successModal');
+  const deleteModal = document.getElementById('deleteModal');
+  const deleteSuccessModal = document.getElementById('deleteSuccessModal');
   const confirmChangesBtn = document.getElementById('confirmChangesBtn');
   const cancelChangesBtn = document.getElementById('cancelChangesBtn');
   const successOkBtn = document.getElementById('successOkBtn');
+  const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+  const deleteCancelBtn = document.getElementById('deleteCancelBtn');
+  const deleteSuccessOkBtn = document.getElementById('deleteSuccessOkBtn');
   const confirmText = document.getElementById("confirmText");
   const successText = document.getElementById("successText");
+  const deleteText = document.getElementById("deleteText");
+  const deleteSuccessText = document.getElementById("deleteSuccessText");
 
   const dateInput = document.getElementById('date');
   const today = new Date().toISOString().split('T')[0];
@@ -83,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (confirmText) confirmText.textContent = "¿Deseas guardar los cambios de este ingreso extra?";
     if (successText) successText.textContent = "¡El ingreso extra se actualizó correctamente!";
     if (deleteBtn) deleteBtn.style.display = "inline-block";
+    if (deleteText) deleteText.textContent = "¿Seguro que deseas eliminar este ingreso extra?";
+    if (deleteSuccessText) deleteSuccessText.textContent = "¡El ingreso extra se eliminó correctamente!";
 
     (async () => {
       try {
@@ -101,16 +110,23 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     if (deleteBtn) {
-      deleteBtn.onclick = async () => {
-        if (!confirm("¿Seguro que deseas eliminar este ingreso extra?")) return;
+      deleteBtn.onclick = (e) => {
+        e.preventDefault();
+        setModal(deleteModal, true);
+      };
+    }
+    if (deleteConfirmBtn) {
+      deleteConfirmBtn.onclick = async () => {
         try {
-          const resp = await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
-            method: "DELETE",
+          const res = await fetch(`${API_BASE}/api/IngresosExtra/${id}/`, {
+            method: 'DELETE',
             headers: { 'Authorization': 'Bearer ' + token }
           });
-          if (!resp.ok) throw new Error(await parseError(resp));
-          window.location.href = "income.html";
+          if (!res.ok) throw new Error(await parseError(res));
+          setModal(deleteModal, false);
+          setModal(deleteSuccessModal, true);
         } catch (err) {
+          setModal(deleteModal, false);
           alert("Error: " + (err?.message || String(err)));
         }
       };
@@ -126,7 +142,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8) Abrir/cerrar modales
   if (addBtn) addBtn.onclick = (e) => { e.preventDefault(); setModal(confirmModal, true); };
   if (cancelChangesBtn) cancelChangesBtn.onclick = () => setModal(confirmModal, false);
-  if (successOkBtn) successOkBtn.onclick = () => window.location.href = "income.html";
+  if (deleteCancelBtn) deleteCancelBtn.onclick = () => setModal(deleteModal, false);
+  if (successOkBtn) {
+  successOkBtn.onclick = () => {
+    window.location.href = "income.html?tab=supp";
+  };
+}
+  if (deleteSuccessOkBtn) {
+    deleteSuccessOkBtn.onclick = () => {
+      window.location.href = "income.html?tab=supp";
+    };
+  }
+
 
   // 9) Guardar (crear/actualizar)
   if (confirmChangesBtn) {

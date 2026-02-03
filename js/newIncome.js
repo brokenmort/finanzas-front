@@ -24,11 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const deleteBtn = document.getElementById("delete-btn");
   const confirmModal = document.getElementById('confirmModal');
   const successModal = document.getElementById('successModal');
+  const deleteModal = document.getElementById('deleteModal');
+  const deleteSuccessModal = document.getElementById('deleteSuccessModal');
+  const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+  const deleteCancelBtn = document.getElementById('deleteCancelBtn');
+  const deleteSuccessOkBtn = document.getElementById('deleteSuccessOkBtn');
   const confirmChangesBtn = document.getElementById('confirmChangesBtn');
   const cancelChangesBtn = document.getElementById('cancelChangesBtn');
   const successOkBtn = document.getElementById('successOkBtn');
   const confirmText = document.getElementById("confirmText");
   const successText = document.getElementById("successText");
+  const deleteText = document.getElementById("deleteText");
+  const deleteSuccessText = document.getElementById("deleteSuccessText");
 
   // 5) Helpers
   const resolveImageUrl = (raw) => {
@@ -80,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (confirmText) confirmText.textContent = "¿Deseas guardar los cambios de este ingreso?";
     if (successText) successText.textContent = "¡El ingreso se actualizó correctamente!";
     if (deleteBtn) deleteBtn.style.display = "inline-block";
+    if (deleteText) deleteText.textContent = "¿Seguro que deseas eliminar este ingreso?";
+    if (deleteSuccessText) deleteSuccessText.textContent = "¡El ingreso se eliminó correctamente!";
 
     (async () => {
       try {
@@ -98,16 +107,23 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     if (deleteBtn) {
-      deleteBtn.onclick = async () => {
-        if (!confirm("¿Seguro que deseas eliminar este ingreso?")) return;
+      deleteBtn.onclick = (e) => {
+        e.preventDefault();
+        setModal(deleteModal, true);
+      };
+    }
+    if (deleteConfirmBtn) {
+      deleteConfirmBtn.onclick = async () => {
         try {
-          const resp = await fetch(`${API_BASE}/api/IngresosFijos/${id}/`, {
-            method: "DELETE",
+          const res = await fetch(`${API_BASE}/api/IngresosFijos/${id}/`, {
+            method: 'DELETE',
             headers: { 'Authorization': 'Bearer ' + token }
           });
-          if (!resp.ok) throw new Error(await parseError(resp));
-          window.location.href = "income.html";
+          if (!res.ok) throw new Error(await parseError(res));
+          setModal(deleteModal, false);
+          setModal(deleteSuccessModal, true);
         } catch (err) {
+          setModal(deleteModal, false);
           alert("Error: " + (err?.message || String(err)));
         }
       };
@@ -123,7 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8) Abrir/cerrar modales
   if (addBtn) addBtn.onclick = (e) => { e.preventDefault(); setModal(confirmModal, true); };
   if (cancelChangesBtn) cancelChangesBtn.onclick = () => setModal(confirmModal, false);
+  if (deleteCancelBtn) deleteCancelBtn.onclick = () => setModal(deleteModal, false);
   if (successOkBtn) successOkBtn.onclick = () => window.location.replace("income.html");
+  if (deleteSuccessOkBtn) deleteSuccessOkBtn.onclick = () => window.location.replace("income.html")
 ;
 
   // 9) Guardar (crear/actualizar)

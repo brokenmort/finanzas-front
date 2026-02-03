@@ -113,6 +113,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   let allFijos = [];
   let allExtra = [];
   let currentTab = "fix"; // por defecto
+  
+
+  // ✅ Leer tab desde query param (?tab=fix | ?tab=supp)
+const params = new URLSearchParams(window.location.search);
+const tabParam = params.get("tab");
+
+if (tabParam === "supp") {
+  currentTab = "supp";
+}
+
+function filterCurrentMonth(data) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0–11
+
+  return data.filter(item => {
+    if (!item.date) return false;
+    const d = new Date(item.date);
+    return d.getFullYear() === year && d.getMonth() === month;
+  });
+}
+
 
   // ✅ MODIFICADO: carga usando apiFetch con paths
   async function loadIngresos() {
@@ -131,10 +153,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Ingresos Extra
       const resExtra = await window.apiFetch("/api/IngresosExtra/", { method: "GET" });
       if (resExtra.status === 401 || resExtra.status === 403) return handleAuthError();
-      if (resExtra.ok) {
-        allExtra = await resExtra.json();
-        renderExtra(allExtra);
-        if (currentTab === "supp") fillFiltersSupp(allExtra);
+if (resExtra.ok) {
+  allExtra = await resExtra.json();
+
+  const previewExtra =
+    currentTab === "supp"
+      ? filterCurrentMonth(allExtra)
+      : allExtra;
+
+  renderExtra(previewExtra);
+
+  if (currentTab === "supp") fillFiltersSupp(allExtra);
       } else {
         console.warn("[income] IngresosExtra no ok:", resExtra.status);
       }
@@ -203,6 +232,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     dates.forEach((d) => (f2.innerHTML += `<option value="${d}">${d}</option>`));
   }
 
+  const norm = (v) => String(v || "").trim().toLowerCase();
+
+
   // 6) Filtros
   const fixBtn  = document.getElementById("fixSearchBtn");
   const suppBtn = document.getElementById("suppSearchBtn");
@@ -211,9 +243,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     fixBtn.addEventListener("click", () => {
       const f1 = (document.getElementById("fixFilter1") || {}).value || "";
       const f2 = (document.getElementById("fixFilter2") || {}).value || "";
-      const filtered = allFijos.filter(
-        (i) => (f1 === "" || i.name === f1) && (f2 === "" || i.period === f2)
-      );
+const filtered = allFijos.filter((i) =>
+  (f1 === "" || norm(i.name) === norm(f1)) &&
+  (f2 === "" || norm(i.period) === norm(f2))
+);
+
       renderFijos(filtered);
     });
   }
@@ -222,9 +256,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     suppBtn.addEventListener("click", () => {
       const f1 = (document.getElementById("suppFilter1") || {}).value || "";
       const f2 = (document.getElementById("suppFilter2") || {}).value || "";
-      const filtered = allExtra.filter(
-        (i) => (f1 === "" || i.name === f1) && (f2 === "" || i.date === f2)
-      );
+const filtered = allExtra.filter((i) =>
+  (f1 === "" || norm(i.name) === norm(f1)) &&
+  (f2 === "" || i.date === f2)
+);
+
       renderExtra(filtered);
     });
   }
@@ -246,8 +282,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  // 8) Carga inicial
-  loadIngresos();
+// 8) Carga inicial
+await loadIngresos();
+window.switchTab(currentTab);
 
   console.info("[income] API_BASE:", API_BASE);
 });
