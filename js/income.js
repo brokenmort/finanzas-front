@@ -251,3 +251,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   console.info("[income] API_BASE:", API_BASE);
 });
+
+window.goToWallet = () => {
+  window.location.replace("wallet.html");
+};
+

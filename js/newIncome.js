@@ -123,7 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8) Abrir/cerrar modales
   if (addBtn) addBtn.onclick = (e) => { e.preventDefault(); setModal(confirmModal, true); };
   if (cancelChangesBtn) cancelChangesBtn.onclick = () => setModal(confirmModal, false);
-  if (successOkBtn) successOkBtn.onclick = () => window.location.href = "income.html";
+  if (successOkBtn) successOkBtn.onclick = () => window.location.replace("income.html");
+;
 
   // 9) Guardar (crear/actualizar)
   if (confirmChangesBtn) {

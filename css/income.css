@@ -93,7 +93,9 @@ body{
 .tab-btn.active { background: #606c38; color: #dda15e; }
 
 .table-wrap { 
-    background: none; border-radius: 18px; padding: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.12); 
+    background: none; 
+    border-radius: 18px; 
+    padding: 10px; 
     overflow-x: auto;
    
 }
@@ -104,33 +106,32 @@ table {
 }
 thead th { background:#778647; color:#DDA15E; padding:16px; text-align:center; }
 tbody td { background:#dceda19a; padding:16px; text-align:center; }
-div.contenedor-padre{
+
+.contenedor-padre {
     background: linear-gradient(#606c3886, #90b067);
     display: flex;
     flex-direction: column;
     max-width: 1000px;
     width: 100%;
     min-width: 300px;
-    padding: 10px 30px;
+    padding: 40px 20px;
     border-radius: 20px;
     box-sizing: border-box;
-    min-height: 300px;
-    max-height: 620px;
-    margin: 10px auto;
-    padding-top: 60px; overflow: hidden;
+    margin: 20px auto;
 }
-.contenedor{
+
+/* el contenedor interno sí puede crecer libre */
+.contenedor {
     margin: auto;
     width: 100%;
-    padding: 20px 30px 10px 30px;
+    padding: 20px 30px;
     background: rgba(222, 222, 222, 0.176);
     border-radius: 50px;
     max-width: 90%;
     box-sizing: border-box;
     box-shadow: 0px 10px 3px 10px rgba(1, 1, 1, 0.1);
-    overflow: hidden;
-    max-height: 600px;
 }
+
 .contenedor h2{
     margin-top: 0;
     margin-bottom: 20px;
@@ -145,7 +146,7 @@ div.contenedor-padre{
     text-shadow: 2px 2px 1px rgba(1, 1, 1, 0.2);
 }
 .contenedor .button input{
-   width: auto;
+   width: 30%;
    border-radius: 500px;
    padding: 15px 15px;
    margin: 10px 0;
@@ -167,6 +168,33 @@ div.contenedor-padre{
     background-color: #dda15e;
     transition: 0.3s;
 }
+
+/* altura aproximada de 5 filas */
+.fixed-table tbody,
+.supp-table tbody {
+    display: block;
+    max-height: 200px; /* ajusta según el padding de tus filas */
+    overflow-y: auto;
+}
+
+/* mantener alineadas las columnas */
+.fixed-table thead,
+.supp-table thead,
+.fixed-table tbody tr,
+.supp-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+tbody::-webkit-scrollbar {
+  width: 8px;
+}
+tbody::-webkit-scrollbar-thumb {
+  background: #606c38;
+  border-radius: 10px;
+}
+
 table{
    width: 100%;
    box-shadow: 0px 5px 3px 3px rgba(1, 1, 1, 0.1);
