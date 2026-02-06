@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const successText = document.getElementById("successText");
   const deleteText = document.getElementById("deleteText");
   const deleteSuccessText = document.getElementById("deleteSuccessText");
+  const convertCheckbox = document.getElementById("convertToFixed");//NUEVO
 
   const dateInput = document.getElementById('date');
   const today = new Date().toISOString().split('T')[0];
@@ -92,6 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteBtn) deleteBtn.style.display = "inline-block";
     if (deleteText) deleteText.textContent = "¿Seguro que deseas eliminar este ingreso extra?";
     if (deleteSuccessText) deleteSuccessText.textContent = "¡El ingreso extra se eliminó correctamente!";
+    if (convertCheckbox) { //NUEVO
+  convertCheckbox.addEventListener("change", () => {
+    if (convertCheckbox.checked) {
+      confirmText.textContent =
+        "Este ingreso dejará de ser extra y se convertirá en ingreso fijo. ¿Deseas continuar?";
+    } else {
+      confirmText.textContent = id
+        ? "¿Deseas guardar los cambios de este ingreso extra?"
+        : "¿Deseas crear este ingreso extra?";
+    }
+  });
+}
 
     (async () => {
       try {
@@ -169,6 +182,41 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!payload.name) { alert("El nombre del ingreso es requerido"); return; }
       if (!payload.quantity || isNaN(Number(payload.quantity))) { alert("El monto debe ser numérico"); return; }
       if (!payload.date) { alert("La fecha es requerida"); return; }
+
+      // 👉 CONVERSIÓN A INGRESO FIJO
+if (convertCheckbox && convertCheckbox.checked) {
+  const fixedIncomeData = {
+    name: payload.name,
+    reason: payload.reason,
+    quantity: payload.quantity,
+    date: payload.date
+  };
+
+  // Guardar temporalmente
+  localStorage.setItem(
+    "convertToFixedIncome",
+    JSON.stringify(fixedIncomeData)
+  );
+
+  // Cerrar modal y redirigir
+  setModal(confirmModal, false);
+  window.location.href = "newIncome.html";
+  return; // ⛔ no crear ingreso extra
+} //NUEVO
+
+document.addEventListener("DOMContentLoaded", () => {
+  const data = localStorage.getItem("convertToFixedIncome");
+  if (!data) return;
+
+  const income = JSON.parse(data);
+
+  document.getElementById("incomeType").value = income.name;
+  document.getElementById("description").value = income.reason;
+  document.getElementById("amount").value = income.quantity;
+  document.getElementById("date").value = income.date;
+
+  localStorage.removeItem("convertToFixedIncome");
+});//NUEVO
 
       const url = id ? `${API_BASE}/api/IngresosExtra/${id}/` : `${API_BASE}/api/IngresosExtra/`;
       const method = id ? "PUT" : "POST";

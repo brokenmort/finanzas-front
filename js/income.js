@@ -293,3 +293,14 @@ window.goToWallet = () => {
   window.location.replace("wallet.html");
 };
 
+  const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+
+  const fechaActual = new Date();
+  const mesActual = meses[fechaActual.getMonth()];
+
+  document.getElementById("mes-actual").textContent = mesActual;
+
+
